@@ -3,8 +3,13 @@ import { Message } from "firebase-admin/messaging";
 import { NextRequest, NextResponse } from "next/server";
 
 // Initialize Firebase Admin SDK
+
 if (!admin.apps.length) {
-  const serviceAccount = require("@/service_key.json");
+  // Decode Base64 environment variable and parse JSON
+  const serviceAccount = JSON.parse(
+    Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT || "", "base64").toString("utf8")
+  );
+
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
   });
